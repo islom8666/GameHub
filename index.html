@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>TopGameHub — ПК-игры на телефоне</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    }
+
+    body {
+      background-color: #141517;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    .mobile-screen {
+      width: 100%;
+      max-width: 440px;
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 0%, #26282c 0%, #141517 55%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      padding: 36px 16px 24px;
+      overflow: hidden;
+    }
+
+    .bg-watermark {
+      position: absolute;
+      top: 12px;
+      left: -14px;
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: rgba(255, 255, 255, 0.03);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .header {
+      text-align: center;
+      z-index: 2;
+      margin-top: 16px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      font-weight: 600;
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .arrows {
+      color: #f59e0b;
+      font-size: 13px;
+      letter-spacing: -1px;
+    }
+
+    .title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      color: #ffffff;
+    }
+
+    .games-grid-wrapper {
+      position: relative;
+      margin: 22px -48px;
+      z-index: 1;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .game-card {
+      height: 112px;
+      border-radius: 14px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: flex-end;
+      padding: 10px;
+    }
+
+    .game-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.78) 10%, rgba(0,0,0,0.12) 70%);
+    }
+
+    .game-card span {
+      position: relative;
+      z-index: 2;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    }
+
+    .games-grid-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background:
+        linear-gradient(to right, #141517 4%, transparent 24%, transparent 76%, #141517 96%),
+        linear-gradient(to bottom, #141517 0%, transparent 18%, transparent 82%, #141517 100%);
+    }
+
+    .g1 { background-image: linear-gradient(135deg, #1e293b, #0f172a); }
+    .g2 { background-image: linear-gradient(135deg, #1b4332, #081c15); }
+    .g3 { background-image: linear-gradient(135deg, #3f2e21, #1c130d); }
+    .g4 { background-image: linear-gradient(135deg, #1e3a5f, #0f172a); }
+    .g5 { background-image: linear-gradient(135deg, #2b5876, #4e4376); }
+    .g6 { background-image: linear-gradient(135deg, #4a1d1f, #1f0a0b); }
+    .g7 { background-image: linear-gradient(135deg, #27272a, #18181b); }
+    .g8 { background-image: linear-gradient(135deg, #7f1d1d, #1c1917); }
+    .g9 { background-image: linear-gradient(135deg, #312e81, #1e1b4b); }
+
+    .bottom-card {
+      z-index: 4;
+      background: rgba(42, 44, 48, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 26px;
+      padding: 24px 18px 18px;
+      box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.55);
+    }
+
+    .features-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .feature-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .feature-icon {
+      width: 34px;
+      height: 34px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+    }
+
+    .feature-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .feature-desc {
+      font-size: 11.5px;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    .cta-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      height: 52px;
+      border-radius: 15px;
+      background: linear-gradient(90deg, #1d74e8 0%, #2b8eff 100%);
+      color: #ffffff;
+      font-size: 17px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(37, 134, 245, 0.35);
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .cta-button:active {
+      transform: scale(0.98);
+      opacity: 0.92;
+    }
+  </style>
+</head>
+<body>
+  <main class="mobile-screen">
+    <div class="bg-watermark">WELCOME</div>
+
+    <header class="header">
+      <div class="subtitle">
+        ПК-игры на телефоне <span class="arrows">&#9654;&#9654;</span>
+      </div>
+      <h1 class="title">Откройте TopGameHub</h1>
+    </header>
+
+    <section class="games-grid-wrapper" aria-hidden="true">
+      <div class="games-grid">
+        <div class="game-card g1"><span>Cyberpunk</span></div>
+        <div class="game-card g2"><span>Elden Ring</span></div>
+        <div class="game-card g3"><span>Red Dead 2</span></div>
+
+        <div class="game-card g4"><span>Witcher 3</span></div>
+        <div class="game-card g5"><span>Hogwarts Legacy</span></div>
+        <div class="game-card g6"><span>It Takes Two</span></div>
+
+        <div class="game-card g7"><span>GTA V</span></div>
+        <div class="game-card g8"><span>Palworld</span></div>
+        <div class="game-card g9"><span>Far Cry 6</span></div>
+      </div>
+    </section>
+
+    <section class="bottom-card">
+      <div class="features-row">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 16.5v-5l4.5 2.5-4.5 2.5z"/>
+            </svg>
+          </div>
+          <div class="feature-title">Играйте локально</div>
+          <div class="feature-desc">Консоль в руке</div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+            </svg>
+          </div>
+          <div class="feature-title">Профили для игр</div>
+          <div class="feature-desc">Без настройки</div>
+        </div>
+      </div>
+
+      <a class="cta-button" href="https://github.com/islom8666/GameHub/releases/latest/download/app-release.apk">
+        Начать <span style="font-size: 20px;">&rarr;</span>
+      </a>
+    </section>
+  </main>
+</body>
+</html>
