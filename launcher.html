@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Launcher — Grand Theft Auto V</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #111214;
+      color: #fff;
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .box {
+      max-width: 420px;
+      width: 100%;
+      background: #1f2228;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+    }
+    .play-btn {
+      margin-top: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 12px;
+      border: none;
+      background: #84cc16;
+      color: #111;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Grand Theft Auto V</h2>
+    <p style="color:#9ca3af; font-size:14px; margin-top:6px;">Готов к запуску в браузере</p>
+    <button id="launchPlayBtn" type="button" class="play-btn">Play &rarr;</button>
+    <div id="status">Ожидание запуска...</div>
+  </div>
+
+  <script>
+    const btn = document.getElementById("launchPlayBtn");
+    const statusEl = document.getElementById("status");
+
+    btn.addEventListener("click", () => {
+      statusEl.textContent = "Игра запускается...";
+    });
+
+    const hasAutoPlay =
+      window.location.hash.includes("autoPlay=1") ||
+      new URLSearchParams(window.location.search).get("autoPlay") === "1";
+
+    if (hasAutoPlay) {
+      window.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => btn.click(), 150);
+      });
+    }
+  </script>
+</body>
+</html>
