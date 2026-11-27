@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -13,7 +13,7 @@
     }
 
     body {
-      background-color: #141517;
+      background-color: #111214;
       color: #ffffff;
       min-height: 100vh;
       display: flex;
@@ -23,102 +23,198 @@
 
     .mobile-screen {
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
       min-height: 100vh;
-      background: radial-gradient(circle at 50% 0%, #26282c 0%, #141517 55%);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(43, 142, 255, 0.16) 0%, transparent 45%),
+        radial-gradient(circle at 85% 10%, rgba(245, 158, 11, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 0%, #26292e 0%, #121316 58%);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       position: relative;
-      padding: 36px 16px 24px;
+      padding: 16px 16px 24px;
       overflow: hidden;
+    }
+
+    /* IXCHAM YUMALOQ BAYROQLI TIL PANELI (ASOSIY TIL: RU) */
+    .lang-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      z-index: 5;
+      margin-bottom: 10px;
+    }
+
+    .lang-btn {
+      width: 34px;
+      height: 34px;
+      padding: 3px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      overflow: hidden;
+    }
+
+    .lang-btn:hover {
+      transform: scale(1.06);
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .lang-btn.active {
+      border-color: #2b8eff;
+      box-shadow: 0 0 0 3px rgba(43, 142, 255, 0.28);
+      transform: scale(1.06);
+    }
+
+    .flag-circle {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      display: block;
+    }
+
+    .screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      justify-content: space-between;
+      animation: fadeIn 0.25s ease;
+      z-index: 2;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .bg-watermark {
       position: absolute;
-      top: 12px;
+      top: 10px;
       left: -14px;
       font-size: 64px;
       font-weight: 900;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       color: rgba(255, 255, 255, 0.03);
       pointer-events: none;
       user-select: none;
       white-space: nowrap;
+      z-index: 0;
     }
 
+    /* 1-SAHIFA: WELCOME */
     .header {
       text-align: center;
-      z-index: 2;
-      margin-top: 16px;
+      margin-top: 2px;
     }
 
     .subtitle {
-      font-size: 16px;
+      font-size: 14.5px;
       font-weight: 600;
       color: #e5e7eb;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       margin-bottom: 10px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.07);
     }
 
     .arrows {
       color: #f59e0b;
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: -1px;
     }
 
     .title {
-      font-size: 32px;
+      font-size: 31px;
       font-weight: 800;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.6px;
       line-height: 1.15;
       color: #ffffff;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
     }
 
     .games-grid-wrapper {
       position: relative;
-      margin: 22px -48px;
+      margin: 16px -18px;
       z-index: 1;
     }
 
     .games-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 10px;
     }
 
     .game-card {
       height: 112px;
-      border-radius: 14px;
-      background-size: cover;
-      background-position: center;
+      border-radius: 15px;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
       display: flex;
-      align-items: flex-end;
-      padding: 10px;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 7px 6px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .game-card::before {
+      content: "";
+      position: absolute;
+      top: -26px;
+      right: -22px;
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: var(--glow, rgba(59, 130, 246, 0.35));
+      filter: blur(16px);
+      z-index: 1;
     }
 
     .game-card::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.78) 10%, rgba(0,0,0,0.12) 70%);
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.48) 28%, rgba(0, 0, 0, 0.08) 72%);
+      z-index: 1;
     }
 
-    .game-card span {
+    .game-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .game-card span.game-title {
       position: relative;
       z-index: 2;
-      font-size: 12px;
+      font-size: 9.5px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: rgba(255, 255, 255, 0.9);
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+      letter-spacing: 0.15px;
+      line-height: 1.15;
+      color: rgba(255, 255, 255, 0.99);
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.98);
+    }
+
+    .game-card.no-wrap span.game-title {
+      white-space: nowrap;
     }
 
     .games-grid-wrapper::before {
@@ -128,49 +224,43 @@
       z-index: 3;
       pointer-events: none;
       background:
-        linear-gradient(to right, #141517 4%, transparent 24%, transparent 76%, #141517 96%),
-        linear-gradient(to bottom, #141517 0%, transparent 18%, transparent 82%, #141517 100%);
+        linear-gradient(to right, rgba(18, 19, 22, 0.72) 0%, transparent 10%, transparent 90%, rgba(18, 19, 22, 0.72) 100%),
+        linear-gradient(to bottom, rgba(18, 19, 22, 0.65) 0%, transparent 14%, transparent 86%, rgba(18, 19, 22, 0.65) 100%);
     }
-
-    .g1 { background-image: linear-gradient(135deg, #1e293b, #0f172a); }
-    .g2 { background-image: linear-gradient(135deg, #1b4332, #081c15); }
-    .g3 { background-image: linear-gradient(135deg, #3f2e21, #1c130d); }
-    .g4 { background-image: linear-gradient(135deg, #1e3a5f, #0f172a); }
-    .g5 { background-image: linear-gradient(135deg, #2b5876, #4e4376); }
-    .g6 { background-image: linear-gradient(135deg, #4a1d1f, #1f0a0b); }
-    .g7 { background-image: linear-gradient(135deg, #27272a, #18181b); }
-    .g8 { background-image: linear-gradient(135deg, #7f1d1d, #1c1917); }
-    .g9 { background-image: linear-gradient(135deg, #312e81, #1e1b4b); }
 
     .bottom-card {
       z-index: 4;
-      background: rgba(42, 44, 48, 0.88);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(38, 40, 45, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 26px;
-      padding: 24px 18px 18px;
-      box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.55);
+      padding: 18px 16px 16px;
+      box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.6);
     }
 
     .features-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      gap: 12px;
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
 
     .feature-item {
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 10px 6px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     .feature-icon {
-      width: 34px;
-      height: 34px;
-      margin-bottom: 10px;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -181,7 +271,7 @@
       font-size: 13.5px;
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .feature-desc {
@@ -197,19 +287,460 @@
       gap: 8px;
       width: 100%;
       height: 52px;
+      border: none;
+      cursor: pointer;
       border-radius: 15px;
       background: linear-gradient(90deg, #1d74e8 0%, #2b8eff 100%);
       color: #ffffff;
       font-size: 17px;
       font-weight: 700;
       text-decoration: none;
-      box-shadow: 0 6px 20px rgba(37, 134, 245, 0.35);
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      box-shadow: 0 8px 22px rgba(37, 134, 245, 0.38);
+      transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .cta-button:hover {
+      box-shadow: 0 10px 26px rgba(43, 142, 255, 0.5);
     }
 
     .cta-button:active {
       transform: scale(0.98);
       opacity: 0.92;
+    }
+
+    .cta-meta {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 11.5px;
+      color: #9ca3af;
+      min-height: 16px;
+    }
+
+    /* 2-SAHIFA: ASOSIY MENYU */
+    #screenHub {
+      justify-content: flex-start;
+    }
+
+    .hub-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .search-pill {
+      flex: 1;
+      height: 38px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      min-width: 0;
+      transition: border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .search-pill:focus-within {
+      border-color: rgba(43, 142, 255, 0.65);
+      background: rgba(255, 255, 255, 0.11);
+    }
+
+    .search-pill-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-size: 12.5px;
+      min-width: 0;
+    }
+
+    .search-pill-input::placeholder {
+      color: #9ca3af;
+    }
+
+    .search-clear-btn {
+      display: none;
+      background: rgba(255, 255, 255, 0.12);
+      border: none;
+      color: #d1d5db;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      font-size: 11px;
+      line-height: 1;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .search-clear-btn.visible {
+      display: inline-flex;
+    }
+
+    .hub-badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #60a5fa;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      padding: 6px 11px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .hub-heading {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .hub-sub {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 12px;
+    }
+
+    /* AYLANIB TURADIGAN O'YIN RASMLARI LENTASI */
+    .marquee-box {
+      position: relative;
+      overflow: hidden;
+      margin: 0 -16px 14px;
+      padding: 2px 0;
+    }
+
+    .marquee-box::before,
+    .marquee-box::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .marquee-box::before {
+      left: 0;
+      background: linear-gradient(to right, #121316, transparent);
+    }
+
+    .marquee-box::after {
+      right: 0;
+      background: linear-gradient(to left, #121316, transparent);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 10px;
+      width: max-content;
+      animation: spinGames 22s linear infinite;
+    }
+
+    .marquee-box:hover .marquee-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes spinGames {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .marquee-slide {
+      width: 118px;
+      height: 76px;
+      border-radius: 13px;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 6px 5px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+    }
+
+    .marquee-slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.1) 70%);
+      z-index: 1;
+    }
+
+    .marquee-label {
+      position: relative;
+      z-index: 2;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+    }
+
+    .chips-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
+
+    .chips-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: #d1d5db;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: #2b8eff;
+      border-color: #2b8eff;
+      color: #ffffff;
+    }
+
+    .catalog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      max-height: 410px;
+      overflow-y: auto;
+      padding-right: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+    }
+
+    .catalog-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 11px;
+      border-radius: 15px;
+      background: rgba(38, 40, 45, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .catalog-main {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .catalog-thumb {
+      width: 52px;
+      height: 38px;
+      border-radius: 10px;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      flex-shrink: 0;
+    }
+
+    .catalog-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .catalog-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .catalog-tag {
+      font-size: 11px;
+      color: #9ca3af;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .play-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(90deg, #1d74e8 0%, #2b8eff 100%);
+      border: 1px solid rgba(96, 165, 250, 0.45);
+      padding: 6px 12px;
+      border-radius: 11px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(37, 134, 245, 0.3);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+    }
+
+    .play-pill:hover {
+      box-shadow: 0 6px 16px rgba(43, 142, 255, 0.48);
+    }
+
+    .play-pill:active {
+      transform: scale(0.96);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 24px 12px;
+      font-size: 13px;
+      color: #9ca3af;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 14px;
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+    }
+
+    /* DESKTOP MOSLASHUVCHAN KO'RINISH */
+    @media (min-width: 768px) {
+      .mobile-screen {
+        max-width: 1140px;
+        padding: 24px 28px 36px;
+        border-radius: 28px;
+        margin: 16px 0;
+        min-height: calc(100vh - 32px);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .bg-watermark {
+        font-size: 110px;
+        left: 12px;
+      }
+
+      .title {
+        font-size: 40px;
+      }
+
+      .games-grid-wrapper {
+        margin: 22px 0;
+      }
+
+      .games-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+      }
+
+      .game-card {
+        height: 142px;
+      }
+
+      .game-card span.game-title {
+        font-size: 11px;
+      }
+
+      .marquee-box {
+        margin: 0 0 18px;
+      }
+
+      .marquee-slide {
+        width: 156px;
+        height: 96px;
+      }
+
+      .catalog-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        max-height: none;
+        overflow-y: visible;
+      }
+
+      .catalog-item {
+        padding: 12px 14px;
+      }
+    }
+
+    /* FULLSCREEN PLAYER MODAL */
+    #playerOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000000;
+      flex-direction: column;
+    }
+
+    #playerOverlay.active {
+      display: flex;
+    }
+
+    .player-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #14161a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .player-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .player-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .player-btn-fs {
+      background: #2b8eff;
+    }
+
+    .player-btn-close {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    #gameFrame {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000000;
     }
   </style>
 </head>
@@ -217,56 +748,648 @@
   <main class="mobile-screen">
     <div class="bg-watermark">WELCOME</div>
 
-    <header class="header">
-      <div class="subtitle">
-        ПК-игры на телефоне <span class="arrows">&#9654;&#9654;</span>
-      </div>
-      <h1 class="title">Откройте TopGameHub</h1>
-    </header>
+    <!-- IXCHAM YUMALOQ BAYROQLI TIL PANELI (ASOSIY TIL: RU) -->
+    <nav class="lang-bar" aria-label="Language switcher">
+      <button type="button" class="lang-btn" data-lang="uz" title="O‘zbekcha">
+        <svg class="flag-circle" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <rect width="36" height="12" y="0" fill="#0099B5"/>
+          <rect width="36" height="1.2" y="11.4" fill="#CE1126"/>
+          <rect width="36" height="12" y="12.6" fill="#FFFFFF"/>
+          <rect width="36" height="1.2" y="24" fill="#CE1126"/>
+          <rect width="36" height="10.8" y="25.2" fill="#1EB53A"/>
+          <circle cx="9" cy="6" r="2.8" fill="#FFFFFF"/>
+          <circle cx="10" cy="6" r="2.2" fill="#0099B5"/>
+        </svg>
+      </button>
 
-    <section class="games-grid-wrapper" aria-hidden="true">
-      <div class="games-grid">
-        <div class="game-card g1"><span>Cyberpunk</span></div>
-        <div class="game-card g2"><span>Elden Ring</span></div>
-        <div class="game-card g3"><span>Red Dead 2</span></div>
+      <button type="button" class="lang-btn active" data-lang="ru" title="Русский">
+        <svg class="flag-circle" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <rect width="36" height="12" y="0" fill="#FFFFFF"/>
+          <rect width="36" height="12" y="12" fill="#0039A6"/>
+          <rect width="36" height="12" y="24" fill="#D52B1E"/>
+        </svg>
+      </button>
 
-        <div class="game-card g4"><span>Witcher 3</span></div>
-        <div class="game-card g5"><span>Hogwarts Legacy</span></div>
-        <div class="game-card g6"><span>It Takes Two</span></div>
+      <button type="button" class="lang-btn" data-lang="en" title="English">
+        <svg class="flag-circle" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <rect width="36" height="36" fill="#B22234"/>
+          <rect y="5.5" width="36" height="3" fill="#FFFFFF"/>
+          <rect y="11" width="36" height="3" fill="#FFFFFF"/>
+          <rect y="16.5" width="36" height="3" fill="#FFFFFF"/>
+          <rect y="22" width="36" height="3" fill="#FFFFFF"/>
+          <rect y="27.5" width="36" height="3" fill="#FFFFFF"/>
+          <rect width="18" height="19.5" fill="#3C3B6E"/>
+        </svg>
+      </button>
+    </nav>
 
-        <div class="game-card g7"><span>GTA V</span></div>
-        <div class="game-card g8"><span>Palworld</span></div>
-        <div class="game-card g9"><span>Far Cry 6</span></div>
-      </div>
-    </section>
+    <!-- 1-SAHIFA: KIRISH EKRANI -->
+    <div id="screenWelcome" class="screen active">
+      <header class="header">
+        <div class="subtitle">
+          <span id="tSubtitle">ПК-игры на телефоне</span> <span class="arrows">&#9654;&#9654;</span>
+        </div>
+        <h1 id="tTitle" class="title">Откройте TopGameHub</h1>
+      </header>
 
-    <section class="bottom-card">
-      <div class="features-row">
-        <div class="feature-item">
-          <div class="feature-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 16.5v-5l4.5 2.5-4.5 2.5z"/>
-            </svg>
+      <section class="games-grid-wrapper" aria-hidden="true">
+        <div id="gamesGrid" class="games-grid"></div>
+      </section>
+
+      <section class="bottom-card">
+        <div class="features-row">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 16.5v-5l4.5 2.5-4.5 2.5z"/>
+              </svg>
+            </div>
+            <div id="tFeat1Title" class="feature-title">Играйте локально</div>
+            <div id="tFeat1Desc" class="feature-desc">Консоль в руке</div>
           </div>
-          <div class="feature-title">Играйте локально</div>
-          <div class="feature-desc">Консоль в руке</div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+              </svg>
+            </div>
+            <div id="tFeat2Title" class="feature-title">Профили для игр</div>
+            <div id="tFeat2Desc" class="feature-desc">Без настройки</div>
+          </div>
         </div>
 
-        <div class="feature-item">
-          <div class="feature-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
-            </svg>
-          </div>
-          <div class="feature-title">Профили для игр</div>
-          <div class="feature-desc">Без настройки</div>
-        </div>
-      </div>
+        <button id="startBtn" type="button" class="cta-button">
+          <span id="tStartBtn">Начать</span> <span style="font-size: 20px;">&rarr;</span>
+        </button>
+        <div id="tWelcomeMeta" class="cta-meta">Переход в главное меню и каталог игр</div>
+      </section>
+    </div>
 
-      <a class="cta-button" href="https://github.com/islom8666/GameHub/releases/latest/download/app-release.apk">
-        Начать <span style="font-size: 20px;">&rarr;</span>
-      </a>
-    </section>
+    <!-- 2-SAHIFA: ASOSIY MENYU -->
+    <div id="screenHub" class="screen">
+      <div>
+        <div class="hub-top">
+          <label class="search-pill" for="searchInput">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.2">
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              id="searchInput"
+              class="search-pill-input"
+              type="text"
+              placeholder="Call of Duty: Modern Warfare..."
+              autocomplete="off"
+            />
+            <button id="clearSearchBtn" type="button" class="search-clear-btn" title="Clear">&times;</button>
+          </label>
+          <span class="hub-badge">topgamehub.uz</span>
+        </div>
+
+        <h2 id="tHubHeading" class="hub-heading">Главное меню</h2>
+        <p id="tHubSub" class="hub-sub">Выберите категорию или найдите нужную игру в каталоге</p>
+
+        <!-- "ГЛАВНОЕ МЕНЮ" TAGIDA AYLANIB TURADIGAN RASMLAR -->
+        <div class="marquee-box" aria-hidden="true">
+          <div id="marqueeTrack" class="marquee-track"></div>
+        </div>
+
+        <div class="chips-row">
+          <button type="button" class="chip active" data-filter="all" id="tChipAll">Все игры</button>
+          <button type="button" class="chip" data-filter="racing" id="tChipRacing">Гонки</button>
+          <button type="button" class="chip" data-filter="action" id="tChipAction">Экшен / Шутер</button>
+          <button type="button" class="chip" data-filter="sport" id="tChipSport">Спорт / Файтинг</button>
+        </div>
+
+        <div id="catalogList" class="catalog-list"></div>
+      </div>
+    </div>
   </main>
+
+  <!-- FULLSCREEN PLAYER MODAL -->
+  <div id="playerOverlay" aria-hidden="true">
+    <div class="player-topbar">
+      <span id="playerGameTitle" class="player-title">Game</span>
+      <div class="player-actions">
+        <button id="toggleFullscreenBtn" type="button" class="player-btn player-btn-fs">Fullscreen</button>
+        <button id="closePlayerBtn" type="button" class="player-btn player-btn-close">&times;</button>
+      </div>
+    </div>
+    <iframe
+      id="gameFrame"
+      src=""
+      allow="autoplay; fullscreen; gamepad; cross-origin-isolated"
+    ></iframe>
+  </div>
+
+  <script>
+    const GAMES_DB = {
+      gta5: {
+        id: "gta5",
+        title: "Grand Theft Auto V",
+        cat: "action",
+        url: "https://v2.fiveplay.lol/game.html?mode=sandbox&cfg=1_3-russian",
+        noWrap: true,
+        tag: { ru: "Экшен • Готовый профиль управления", uz: "Ekshn • Tayyor boshqaruv profili", en: "Action • Ready control profile" },
+        glow: "rgba(34, 197, 94, 0.52)",
+        grad: "linear-gradient(145deg, #15803d, #09090b 75%)",
+        img: "https://i.ytimg.com/vi/byE9CJkwKkE/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCfbJJyDuGspE423jVVv6lePcXGzg"
+      },
+      codmw: {
+        id: "codmw",
+        title: "Call of Duty: Modern Warfare",
+        cat: "action",
+        tag: { ru: "Шутер • Геймпад и сенсор", uz: "Otishma • Geympad va sensor", en: "Shooter • Gamepad & touch" },
+        glow: "rgba(234, 179, 8, 0.52)",
+        grad: "linear-gradient(145deg, #713f12, #09090b 75%)",
+        img: "https://bnetcmsus-a.akamaihd.net/cms/blog_header/il/ILVRUV8OEP7N1779983217098.jpg"
+      },
+      nfsmw: {
+        id: "nfsmw",
+        title: "Need for Speed: Most Wanted",
+        cat: "racing",
+        url: "https://web.nfsmwo.com/?utm_source=nfsmwo.com&utm_medium=hero&utm_campaign=mwo-website",
+        tag: { ru: "Гонки • Геймпад и сенсор", uz: "Poyga • Geympad va sensor", en: "Racing • Gamepad & touch" },
+        glow: "rgba(245, 158, 11, 0.55)",
+        grad: "linear-gradient(145deg, #b45309, #170b06 75%)",
+        img: "https://images.steamusercontent.com/ugc/17869980787976791722/DC87B2F388ABA1BCE7F16B41F90BB654B108B4AB/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+      },
+      mk: {
+        id: "mk",
+        title: "Mortal Kombat",
+        cat: "sport",
+        tag: { ru: "Файтинг • Локальная игра и геймпад", uz: "Jangari • Lokal o‘yin va geympad", en: "Fighting • Local play & gamepad" },
+        glow: "rgba(234, 179, 8, 0.52)",
+        grad: "linear-gradient(145deg, #78350f, #0b1120 75%)",
+        img: "https://i.ytimg.com/vi/Jr-kyyKFNbo/maxresdefault.jpg"
+      },
+      tekken: {
+        id: "tekken",
+        title: "TEKKEN",
+        cat: "sport",
+        tag: { ru: "Файтинг • Готовый профиль управления", uz: "Jangari • Tayyor boshqaruv profili", en: "Fighting • Ready control profile" },
+        glow: "rgba(239, 68, 68, 0.55)",
+        grad: "linear-gradient(145deg, #7f1d1d, #082f49 75%)",
+        img: "https://i.ytimg.com/vi/-qrvnnvjAXE/sddefault.jpg?v=64109827"
+      },
+      tekken3: {
+        id: "tekken3",
+        title: "TEKKEN 3",
+        cat: "sport",
+        url: "https://www.retrogames.cc/embed/40238-tekken-3.html",
+        tag: { ru: "Файтинг • Готовый профиль управления", uz: "Jangari • Tayyor boshqaruv profili", en: "Fighting • Ready control profile" },
+        glow: "rgba(220, 38, 38, 0.55)",
+        grad: "linear-gradient(145deg, #991b1b, #09090b 75%)",
+        img: "https://static.wikia.nocookie.net/tekken/images/4/4f/Tekken_3.png/revision/latest?cb=20130126215615&path-prefix=en"
+      },
+      nfsu: {
+        id: "nfsu",
+        title: "Need for Speed: Underground",
+        cat: "racing",
+        url: "https://nfsu.cc/",
+        tag: { ru: "Гонки • Готовый профиль управления", uz: "Poyga • Tayyor boshqaruv profili", en: "Racing • Ready control profile" },
+        glow: "rgba(249, 115, 22, 0.55)",
+        grad: "linear-gradient(145deg, #c2410c, #0f172a 75%)",
+        img: "https://i.ytimg.com/vi/798fP9ln3lM/maxresdefault.jpg"
+      },
+      fifa16: {
+        id: "fifa16",
+        title: "FIFA 16",
+        cat: "sport",
+        url: "https://fifa15.gamingretro.online/",
+        tag: { ru: "Футбол • Локальная игра и геймпад", uz: "Futbol • Lokal o‘yin va geympad", en: "Football • Local play & gamepad" },
+        glow: "rgba(59, 130, 246, 0.55)",
+        grad: "linear-gradient(145deg, #1d4ed8, #0f172a 75%)",
+        img: "https://i.ytimg.com/vi/MY558vVbpWU/maxresdefault.jpg"
+      },
+      pes13: {
+        id: "pes13",
+        title: "PES 2013",
+        cat: "sport",
+        tag: { ru: "Футбол • Геймпад и сенсор", uz: "Futbol • Geympad va sensor", en: "Football • Gamepad & touch" },
+        glow: "rgba(239, 68, 68, 0.48)",
+        grad: "linear-gradient(145deg, #991b1b, #140b07 75%)",
+        img: "https://ir.ozone.ru/s3/multimedia-z/c1000/6783321239.jpg"
+      },
+      cs16: {
+        id: "cs16",
+        title: "Counter Strike 1.6",
+        cat: "action",
+        tag: { ru: "Шутер • Готовый профиль управления", uz: "Otishma • Tayyor boshqaruv profili", en: "Shooter • Ready control profile" },
+        glow: "rgba(245, 158, 11, 0.52)",
+        grad: "linear-gradient(145deg, #9a3412, #09130e 75%)",
+        img: "https://i.ytimg.com/vi/KpjJbmxhkgQ/maxresdefault.jpg"
+      }
+    };
+
+    const WELCOME_GAMES = [
+      GAMES_DB.nfsu,
+      GAMES_DB.cs16,
+      GAMES_DB.pes13,
+      GAMES_DB.mk,
+      GAMES_DB.gta5,
+      GAMES_DB.tekken3,
+      GAMES_DB.codmw,
+      GAMES_DB.nfsmw,
+      GAMES_DB.fifa16
+    ];
+
+    const HUB_GAMES = [
+      GAMES_DB.gta5,
+      GAMES_DB.codmw,
+      GAMES_DB.nfsmw,
+      GAMES_DB.mk,
+      GAMES_DB.tekken,
+      GAMES_DB.tekken3,
+      GAMES_DB.nfsu,
+      GAMES_DB.fifa16,
+      GAMES_DB.pes13,
+      GAMES_DB.cs16
+    ];
+
+    const translations = {
+      ru: {
+        htmlLang: "ru",
+        subtitle: "ПК-игры на телефоне",
+        title: "Откройте TopGameHub",
+        feat1Title: "Играйте локально",
+        feat1Desc: "Консоль в руке",
+        feat2Title: "Профили для игр",
+        feat2Desc: "Без настройки",
+        startBtn: "Начать",
+        welcomeMeta: "Переход в главное меню и каталог игр",
+        searchPlaceholder: "Call of Duty: Modern Warfare...",
+        hubHeading: "Главное меню",
+        hubSub: "Выберите категорию или найдите нужную игру в каталоге",
+        chipAll: "Все игры",
+        chipRacing: "Гонки",
+        chipAction: "Экшен / Шутер",
+        chipSport: "Спорт / Файтинг",
+        play: "Играть",
+        notFound: "По вашему запросу игры не найдены"
+      },
+      uz: {
+        htmlLang: "uz",
+        subtitle: "Telefonda PK o‘yinlar",
+        title: "TopGameHub’ni oching",
+        feat1Title: "Lokal o‘ynang",
+        feat1Desc: "Qo‘lingizda konsol",
+        feat2Title: "O‘yin profillari",
+        feat2Desc: "Sozlamalarsiz",
+        startBtn: "Boshlash",
+        welcomeMeta: "Asosiy menyu va o‘yinlar katalogiga o‘tish",
+        searchPlaceholder: "Call of Duty: Modern Warfare...",
+        hubHeading: "Asosiy menyu",
+        hubSub: "Kategoriyani tanlang yoki katalogdan kerakli o‘yinni toping",
+        chipAll: "Barcha o‘yinlar",
+        chipRacing: "Poygalar",
+        chipAction: "Ekshn / Otishma",
+        chipSport: "Sport / Jangari",
+        play: "Play",
+        notFound: "Qidiruv bo‘yicha o‘yin topilmadi"
+      },
+      en: {
+        htmlLang: "en",
+        subtitle: "PC games on your phone",
+        title: "Discover TopGameHub",
+        feat1Title: "Play locally",
+        feat1Desc: "Console in hand",
+        feat2Title: "Game profiles",
+        feat2Desc: "Zero setup",
+        startBtn: "Get Started",
+        welcomeMeta: "Go to main menu and game catalog",
+        searchPlaceholder: "Call of Duty: Modern Warfare...",
+        hubHeading: "Main Menu",
+        hubSub: "Choose a category or find the game you want in the catalog",
+        chipAll: "All games",
+        chipRacing: "Racing",
+        chipAction: "Action / Shooter",
+        chipSport: "Sports / Fighting",
+        play: "Play",
+        notFound: "No games found for your search"
+      }
+    };
+
+    let currentLang = "ru";
+    let currentFilter = "all";
+    let searchQuery = "";
+    let autoStartTimer = null;
+
+    const gamesGrid = document.getElementById("gamesGrid");
+    const marqueeTrack = document.getElementById("marqueeTrack");
+    const catalogList = document.getElementById("catalogList");
+    const searchInput = document.getElementById("searchInput");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
+    const langButtons = document.querySelectorAll(".lang-btn");
+    const welcomeScreen = document.getElementById("screenWelcome");
+    const hubScreen = document.getElementById("screenHub");
+    const startBtn = document.getElementById("startBtn");
+    const chips = document.querySelectorAll(".chip");
+
+    const playerOverlay = document.getElementById("playerOverlay");
+    const playerGameTitle = document.getElementById("playerGameTitle");
+    const gameFrame = document.getElementById("gameFrame");
+    const toggleFullscreenBtn = document.getElementById("toggleFullscreenBtn");
+    const closePlayerBtn = document.getElementById("closePlayerBtn");
+
+    function clearAutoStartTimer() {
+      if (autoStartTimer) {
+        clearInterval(autoStartTimer);
+        autoStartTimer = null;
+      }
+    }
+
+    function tryAutoClickSinglePlayer(frameEl) {
+      clearAutoStartTimer();
+      let attempts = 0;
+      const maxAttempts = 24;
+
+      autoStartTimer = setInterval(() => {
+        attempts++;
+        try {
+          const doc = frameEl.contentDocument || frameEl.contentWindow?.document;
+          if (!doc) {
+            if (attempts >= maxAttempts) clearAutoStartTimer();
+            return;
+          }
+
+          const directSingle = doc.querySelector("#single-player-button");
+          if (directSingle) {
+            directSingle.click();
+            clearAutoStartTimer();
+            return;
+          }
+
+          const candidates = Array.from(doc.querySelectorAll("button, a, div, span"));
+          const singleBtn = candidates.find((el) => {
+            const txt = (el.textContent || "").trim().toUpperCase();
+            return txt === "ОДИНОЧНАЯ ИГРА" || txt.includes("ОДИНОЧНАЯ ИГРА") || txt.includes("SINGLE PLAYER");
+          });
+
+          if (singleBtn) {
+            singleBtn.click();
+            clearAutoStartTimer();
+            return;
+          }
+        } catch (err) {
+          clearAutoStartTimer();
+          return;
+        }
+
+        if (attempts >= maxAttempts) {
+          clearAutoStartTimer();
+        }
+      }, 500);
+    }
+
+    async function requestOverlayFullscreen() {
+      try {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (playerOverlay.requestFullscreen) {
+            await playerOverlay.requestFullscreen();
+          } else if (playerOverlay.webkitRequestFullscreen) {
+            await playerOverlay.webkitRequestFullscreen();
+          }
+        }
+      } catch (err) {
+        // Brauzer avtomatik fullscreen'ni bloklasa, Fullscreen tugmasi ishlatiladi
+      }
+    }
+
+    async function exitOverlayFullscreen() {
+      try {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          if (document.exitFullscreen) {
+            await document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            await document.webkitExitFullscreen();
+          }
+        }
+      } catch (err) {
+        // E'tiborsiz qoldiriladi
+      }
+    }
+
+    async function openGamePlayer(game) {
+      if (!game || !game.url) return;
+      clearAutoStartTimer();
+      playerGameTitle.textContent = game.title;
+      gameFrame.onload = () => {
+        if (game.id === "nfsmw") {
+          tryAutoClickSinglePlayer(gameFrame);
+        }
+      };
+      gameFrame.src = game.url;
+      playerOverlay.classList.add("active");
+      playerOverlay.setAttribute("aria-hidden", "false");
+      await requestOverlayFullscreen();
+    }
+
+    async function closeGamePlayer() {
+      clearAutoStartTimer();
+      gameFrame.onload = null;
+      gameFrame.src = "";
+      playerOverlay.classList.remove("active");
+      playerOverlay.setAttribute("aria-hidden", "true");
+      await exitOverlayFullscreen();
+    }
+
+    if (toggleFullscreenBtn) {
+      toggleFullscreenBtn.addEventListener("click", async () => {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          await requestOverlayFullscreen();
+        } else {
+          await exitOverlayFullscreen();
+        }
+      });
+    }
+
+    if (closePlayerBtn) {
+      closePlayerBtn.addEventListener("click", closeGamePlayer);
+    }
+
+    function renderGameCards() {
+      if (!gamesGrid) return;
+      gamesGrid.innerHTML = "";
+
+      WELCOME_GAMES.forEach((game) => {
+        const card = document.createElement("div");
+        card.className = "game-card" + (game.noWrap ? " no-wrap" : "");
+        card.style.setProperty("--glow", game.glow);
+        card.style.backgroundImage = game.img ? `url("${game.img}"), ${game.grad}` : game.grad;
+
+        const label = document.createElement("span");
+        label.className = "game-title";
+        label.textContent = game.title;
+
+        card.appendChild(label);
+        gamesGrid.appendChild(card);
+      });
+    }
+
+    function renderSpinningMarquee() {
+      if (!marqueeTrack) return;
+      marqueeTrack.innerHTML = "";
+
+      const doubled = [...HUB_GAMES, ...HUB_GAMES];
+      doubled.forEach((game) => {
+        const slide = document.createElement("div");
+        slide.className = "marquee-slide";
+        slide.style.backgroundImage = game.img ? `url("${game.img}"), ${game.grad}` : game.grad;
+
+        const label = document.createElement("span");
+        label.className = "marquee-label";
+        label.textContent = game.title;
+
+        slide.appendChild(label);
+        marqueeTrack.appendChild(slide);
+      });
+    }
+
+    function renderCatalog(lang = currentLang, filter = currentFilter, query = searchQuery) {
+      if (!catalogList) return;
+      const t = translations[lang] || translations.ru;
+      catalogList.innerHTML = "";
+
+      const normalizedQuery = (query || "").trim().toLowerCase();
+      const filteredGames = HUB_GAMES.filter((game) => {
+        const matchesCat = filter === "all" || game.cat === filter;
+        const matchesQuery = !normalizedQuery || game.title.toLowerCase().includes(normalizedQuery);
+        return matchesCat && matchesQuery;
+      });
+
+      if (!filteredGames.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = t.notFound;
+        catalogList.appendChild(empty);
+        return;
+      }
+
+      filteredGames.forEach((game) => {
+        const item = document.createElement("div");
+        item.className = "catalog-item";
+
+        const main = document.createElement("div");
+        main.className = "catalog-main";
+
+        const thumb = document.createElement("div");
+        thumb.className = "catalog-thumb";
+        thumb.style.backgroundImage = game.img ? `url("${game.img}"), ${game.grad}` : game.grad;
+
+        const left = document.createElement("div");
+        left.className = "catalog-left";
+
+        const titleEl = document.createElement("span");
+        titleEl.className = "catalog-title";
+        titleEl.textContent = game.title;
+
+        const tagEl = document.createElement("span");
+        tagEl.className = "catalog-tag";
+        tagEl.textContent = game.tag[lang] || game.tag.ru;
+
+        left.appendChild(titleEl);
+        left.appendChild(tagEl);
+
+        main.appendChild(thumb);
+        main.appendChild(left);
+
+        const playEl = document.createElement("a");
+        playEl.className = "play-pill";
+        playEl.innerHTML = `<span>&#9654;</span><span>${t.play}</span>`;
+
+        if (game.url) {
+          playEl.href = game.url;
+          playEl.addEventListener("click", (e) => {
+            e.preventDefault();
+            openGamePlayer(game);
+          });
+        } else {
+          playEl.href = "#";
+          playEl.addEventListener("click", (e) => e.preventDefault());
+        }
+
+        item.appendChild(main);
+        item.appendChild(playEl);
+        catalogList.appendChild(item);
+      });
+    }
+
+    function applyLanguage(lang) {
+      const t = translations[lang] || translations.ru;
+      currentLang = lang;
+      document.documentElement.lang = t.htmlLang;
+
+      document.getElementById("tSubtitle").textContent = t.subtitle;
+      document.getElementById("tTitle").textContent = t.title;
+      document.getElementById("tFeat1Title").textContent = t.feat1Title;
+      document.getElementById("tFeat1Desc").textContent = t.feat1Desc;
+      document.getElementById("tFeat2Title").textContent = t.feat2Title;
+      document.getElementById("tFeat2Desc").textContent = t.feat2Desc;
+      document.getElementById("tStartBtn").textContent = t.startBtn;
+      document.getElementById("tWelcomeMeta").textContent = t.welcomeMeta;
+      if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+      document.getElementById("tHubHeading").textContent = t.hubHeading;
+      document.getElementById("tHubSub").textContent = t.hubSub;
+      document.getElementById("tChipAll").textContent = t.chipAll;
+      document.getElementById("tChipRacing").textContent = t.chipRacing;
+      document.getElementById("tChipAction").textContent = t.chipAction;
+      document.getElementById("tChipSport").textContent = t.chipSport;
+
+      langButtons.forEach((btn) => {
+        btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
+      });
+
+      renderCatalog(currentLang, currentFilter, searchQuery);
+    }
+
+    langButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const lang = btn.getAttribute("data-lang");
+        applyLanguage(lang);
+      });
+    });
+
+    if (startBtn && welcomeScreen && hubScreen) {
+      startBtn.addEventListener("click", () => {
+        welcomeScreen.classList.remove("active");
+        hubScreen.classList.add("active");
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value || "";
+        if (clearSearchBtn) {
+          clearSearchBtn.classList.toggle("visible", searchQuery.length > 0);
+        }
+        renderCatalog(currentLang, currentFilter, searchQuery);
+      });
+    }
+
+    if (clearSearchBtn && searchInput) {
+      clearSearchBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        searchQuery = "";
+        clearSearchBtn.classList.remove("visible");
+        renderCatalog(currentLang, currentFilter, searchQuery);
+        searchInput.focus();
+      });
+    }
+
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        chips.forEach((c) => c.classList.remove("active"));
+        chip.classList.add("active");
+        currentFilter = chip.getAttribute("data-filter") || "all";
+        renderCatalog(currentLang, currentFilter, searchQuery);
+      });
+    });
+
+    renderGameCards();
+    renderSpinningMarquee();
+    applyLanguage("ru");
+  </script>
 </body>
 </html>
