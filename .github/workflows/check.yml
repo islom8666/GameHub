@@ -1,0 +1,23 @@
+name: Check catalog
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'index.html', 'tools/**' ]
+  pull_request:
+  schedule:
+    - cron: '0 4 * * *'   # har kuni 09:00 (Toshkent) — havolalar hali ishlayaptimi
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Tuzilma va sintaksis
+        run: node tools/check.js
+      - name: O'yin havolalari
+        run: node tools/check.js --links

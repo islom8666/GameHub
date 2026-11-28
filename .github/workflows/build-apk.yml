@@ -3,6 +3,13 @@
 on:
   push:
     branches: [ main ]
+    # Faqat ilova kodi o'zgarganda APK yig'iladi (sayt o'zgarishi uchun emas)
+    paths:
+      - 'lib/**'
+      - 'android/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 
 permissions:

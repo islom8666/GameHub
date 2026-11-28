@@ -582,6 +582,20 @@
       text-overflow: ellipsis;
     }
 
+    .heavy-badge {
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 3px;
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #ffb84d;
+      background: rgba(255, 184, 77, 0.12);
+      border: 1px solid rgba(255, 184, 77, 0.3);
+      white-space: nowrap;
+    }
+
     .play-pill {
       display: inline-flex;
       align-items: center;
@@ -947,7 +961,9 @@
         id: "nfsu",
         title: "Need for Speed: Underground",
         cat: "racing",
-        url: "https://nfsu.cc/",
+        url: "https://nfsu.cc/launcher.html",
+        external: true,
+        heavy: true,
         tag: { ru: "Гонки • Готовый профиль управления", uz: "Poyga • Tayyor boshqaruv profili", en: "Racing • Ready control profile" },
         glow: "rgba(249, 115, 22, 0.55)",
         grad: "linear-gradient(145deg, #c2410c, #0f172a 75%)",
@@ -976,6 +992,8 @@
         id: "cs16",
         title: "Counter Strike 1.6",
         cat: "action",
+        url: "https://www.inxanitylabs.com/games/counter-strike",
+        external: true,
         tag: { ru: "Шутер • Готовый профиль управления", uz: "Otishma • Tayyor boshqaruv profili", en: "Shooter • Ready control profile" },
         glow: "rgba(245, 158, 11, 0.52)",
         grad: "linear-gradient(145deg, #9a3412, #09130e 75%)",
@@ -1171,8 +1189,34 @@
       }
     }
 
+    // Ba'zi o'yin saytlari iframe ichida ochilishni taqiqlaydi ("refused to connect").
+    // Ular uchun o'yin ob'ektiga `external: true` qo'yiladi va yangi tabda ochiladi.
+    function openGameExternal(game) {
+      let win = null;
+      try {
+        win = window.open(game.url, "_blank", "noopener");
+      } catch (e) {
+        win = null;
+      }
+      if (!win) {
+        // Yangi oyna bloklangan yoki ilova ichidagi WebView: shu oynada ochamiz
+        window.location.href = game.url;
+      }
+    }
+
+    // "Kuchli telefon kerak" belgisi matni (o'yin ob'ektida `heavy: true`)
+    const HEAVY_LABEL = {
+      ru: "⚡ Нужен мощный телефон",
+      uz: "⚡ Kuchli telefon kerak",
+      en: "⚡ Needs a powerful phone"
+    };
+
     async function openGamePlayer(game) {
       if (!game || !game.url) return;
+      if (game.external) {
+        openGameExternal(game);
+        return;
+      }
       clearAutoStartTimer();
       playerGameTitle.textContent = game.title;
       gameFrame.onload = () => {
@@ -1291,6 +1335,13 @@
 
         left.appendChild(titleEl);
         left.appendChild(tagEl);
+
+        if (game.heavy) {
+          const heavyEl = document.createElement("span");
+          heavyEl.className = "heavy-badge";
+          heavyEl.textContent = HEAVY_LABEL[lang] || HEAVY_LABEL.ru;
+          left.appendChild(heavyEl);
+        }
 
         main.appendChild(thumb);
         main.appendChild(left);

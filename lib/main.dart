@@ -1,9 +1,84 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'translations.dart';
 
+const String kDefaultHubUrl = 'https://topgamehub.uz';
+const String kGtaUrl = 'https://www.inxanitylabs.com/games/gta-v';
+const String kNfsuUrl = 'https://nfsu.cc/launcher.html';
+const Color kDarkBgColor = Color(0xFF12161F);
+
+final ChromeSafariBrowser _chromeBrowser = ChromeSafariBrowser();
+
+bool _isGtaLink(Uri? uri) {
+  if (uri == null) return false;
+  final s = uri.toString().toLowerCase();
+  return s.contains('id=0') ||
+      s.contains('gta-v') ||
+      s.contains('gta-6') ||
+      s.contains('gta5') ||
+      s.contains('gta6') ||
+      s.contains('fiveplay.lol') ||
+      s.contains('inxanitylabs.com');
+}
+
+bool _isNfsuLink(Uri? uri) {
+  if (uri == null) return false;
+  final s = uri.toString().toLowerCase();
+  return s.contains('id=4') ||
+      s.contains('underground') ||
+      s.contains('nfsu');
+}
+
+Future<void> _launchInChrome(String targetUrl) async {
+  await _chromeBrowser.open(
+    url: WebUri(targetUrl),
+    settings: ChromeSafariBrowserSettings(
+      shareState: CustomTabsShareState.SHARE_STATE_ON,
+      instantAppsEnabled: true,
+    ),
+  );
+}
+
+const String _kGameClickBridgeJs = """
+(function() {
+  if (window.__tghGameBridgeInstalled) return;
+  window.__tghGameBridgeInstalled = true;
+
+  document.addEventListener('click', function(e) {
+    const el = e.target.closest('a, button, div, article');
+    if (!el) return;
+    const text = (el.innerText || '').toUpperCase();
+    if (text.length > 250) return;
+
+    if (text.includes('GRAND THEFT AUTO V') || text.includes('GTA 6') || text.includes('GTA VI')) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+        window.flutter_inappwebview.callHandler('openGameInChrome', '$kGtaUrl');
+      }
+      return;
+    }
+
+    if (text.includes('NEED FOR SPEED: UNDERGROUND') || text.includes('NFS UNDERGROUND')) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.href = '$kNfsuUrl';
+    }
+  }, true);
+})();
+""";
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: kDarkBgColor,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
   runApp(const GameHubApp());
 }
 
@@ -15,13 +90,7 @@ class GameHubApp extends StatefulWidget {
 }
 
 class _GameHubAppState extends State<GameHubApp> {
-  AppLanguage _currentLanguage = AppLanguage.uz;
-
-  void _changeLanguage(AppLanguage lang) {
-    setState(() {
-      _currentLanguage = lang;
-    });
-  }
+  final AppLanguage _currentLanguage = AppLanguage.uz;
 
   @override
   Widget build(BuildContext context) {
@@ -29,26 +98,20 @@ class _GameHubAppState extends State<GameHubApp> {
       title: Translations.get(_currentLanguage, 'app_name'),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: kDarkBgColor,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
-      home: GameHubHomePage(
-        currentLanguage: _currentLanguage,
-        onLanguageChanged: _changeLanguage,
-      ),
+      home: const GameHubHomePage(),
     );
   }
 }
 
 class GameHubHomePage extends StatefulWidget {
-  final AppLanguage currentLanguage;
-  final ValueChanged<AppLanguage> onLanguageChanged;
-
-  const GameHubHomePage({
-    super.key,
-    required this.currentLanguage,
-    required this.onLanguageChanged,
-  });
+  const GameHubHomePage({super.key});
 
   @override
   State<GameHubHomePage> createState() => _GameHubHomePageState();
@@ -56,163 +119,157 @@ class GameHubHomePage extends StatefulWidget {
 
 class _GameHubHomePageState extends State<GameHubHomePage> {
   InAppWebViewController? _webViewController;
-  final TextEditingController _urlController =
-  TextEditingController(text: 'https://example.com');
-  double _progress = 0;
   bool _hasError = false;
+  bool _isFullscreen = false;
 
-  String _t(String key) => Translations.get(widget.currentLanguage, key);
-
-  void _loadUrl(String rawUrl) {
-    var trimmed = rawUrl.trim();
-    if (trimmed.isEmpty) return;
-    if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
-      trimmed = 'https://$trimmed';
-    }
-    _urlController.text = trimmed;
+  void _reloadHub() {
     setState(() {
       _hasError = false;
     });
     _webViewController?.loadUrl(
-      urlRequest: URLRequest(url: WebUri(trimmed)),
+      urlRequest: URLRequest(url: WebUri(kDefaultHubUrl)),
     );
   }
 
-  @override
-  void dispose() {
-    _urlController.dispose();
-    super.dispose();
+  Future<void> _handleBackPressed() async {
+    if (_isFullscreen) {
+      await _webViewController?.evaluateJavascript(
+        source:
+        'if (document.fullscreenElement) { document.exitFullscreen().catch(()=>{}); }',
+      );
+      if (mounted) {
+        setState(() => _isFullscreen = false);
+      }
+      return;
+    }
+    if (await _webViewController?.canGoBack() ?? false) {
+      await _webViewController?.goBack();
+      return;
+    }
+    if (mounted) {
+      Navigator.of(context).maybePop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_t('app_name')),
-        actions: [
-          IconButton(
-            tooltip: _t('back'),
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () async {
-              if (await _webViewController?.canGoBack() ?? false) {
-                await _webViewController?.goBack();
-              }
-            },
-          ),
-          IconButton(
-            tooltip: _t('forward'),
-            icon: const Icon(Icons.arrow_forward),
-            onPressed: () async {
-              if (await _webViewController?.canGoForward() ?? false) {
-                await _webViewController?.goForward();
-              }
-            },
-          ),
-          IconButton(
-            tooltip: _t('refresh'),
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              setState(() => _hasError = false);
-              _webViewController?.reload();
-            },
-          ),
-          PopupMenuButton<AppLanguage>(
-            tooltip: _t('language'),
-            icon: const Icon(Icons.language),
-            initialValue: widget.currentLanguage,
-            onSelected: widget.onLanguageChanged,
-            itemBuilder: (context) => const [
-              PopupMenuItem(value: AppLanguage.uz, child: Text("O'zbekcha")),
-              PopupMenuItem(value: AppLanguage.ru, child: Text('Русский')),
-              PopupMenuItem(value: AppLanguage.en, child: Text('English')),
-            ],
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        await _handleBackPressed();
+      },
+      child: Scaffold(
+        backgroundColor: kDarkBgColor,
+        body: SafeArea(
+          top: !_isFullscreen,
+          bottom: !_isFullscreen,
+          child: _hasError
+              ? Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: TextField(
-                    controller: _urlController,
-                    decoration: InputDecoration(
-                      hintText: _t('url_placeholder'),
-                      border: const OutlineInputBorder(),
-                      isDense: true,
-                    ),
-                    onSubmitted: _loadUrl,
-                  ),
+                const Text(
+                  'Internet aloqasini tekshiring',
+                  style: TextStyle(color: Colors.white),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(height: 12),
                 ElevatedButton(
-                  onPressed: () => _loadUrl(_urlController.text),
-                  child: Text(_t('load_url')),
+                  onPressed: _reloadHub,
+                  child: const Text('Qayta urinish'),
                 ),
               ],
             ),
-          ),
-          if (_progress < 1.0 && !_hasError)
-            LinearProgressIndicator(value: _progress),
-          Expanded(
-            child: _hasError
-                ? Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(_t('no_internet')),
-                  const SizedBox(height: 12),
-                  ElevatedButton(
-                    onPressed: () => _loadUrl(_urlController.text),
-                    child: Text(_t('retry')),
-                  ),
-                ],
-              ),
-            )
-                : InAppWebView(
-              initialUrlRequest: URLRequest(
-                url: WebUri(_urlController.text),
-              ),
-              initialSettings: InAppWebViewSettings(
-                javaScriptEnabled: true,
-                domStorageEnabled: true,
-              ),
-              onWebViewCreated: (controller) {
-                _webViewController = controller;
-              },
-              onLoadStart: (controller, url) {
-                setState(() {
-                  _hasError = false;
-                  if (url != null) {
-                    _urlController.text = url.toString();
-                  }
-                });
-              },
-              onProgressChanged: (controller, progress) {
-                setState(() {
-                  _progress = progress / 100;
-                });
-              },
-              onLoadStop: (controller, url) {
-                setState(() {
-                  _progress = 1.0;
-                  if (url != null) {
-                    _urlController.text = url.toString();
-                  }
-                });
-              },
-              onReceivedError: (controller, request, error) {
-                if (request.isForMainFrame ?? true) {
-                  setState(() {
-                    _hasError = true;
-                  });
-                }
-              },
+          )
+              : InAppWebView(
+            initialUrlRequest: URLRequest(
+              url: WebUri(kDefaultHubUrl),
             ),
+            initialSettings: InAppWebViewSettings(
+              javaScriptEnabled: true,
+              domStorageEnabled: true,
+              mediaPlaybackRequiresUserGesture: false,
+              allowFileAccessFromFileURLs: true,
+              allowUniversalAccessFromFileURLs: true,
+              supportMultipleWindows: true,
+              transparentBackground: true,
+            ),
+            onWebViewCreated: (controller) {
+              _webViewController = controller;
+              controller.addJavaScriptHandler(
+                handlerName: 'openGameInChrome',
+                callback: (args) async {
+                  final target =
+                  args.isNotEmpty && args.first is String
+                      ? args.first as String
+                      : kGtaUrl;
+                  await _launchInChrome(target);
+                  return true;
+                },
+              );
+            },
+            onEnterFullscreen: (controller) {
+              setState(() => _isFullscreen = true);
+            },
+            onExitFullscreen: (controller) {
+              setState(() => _isFullscreen = false);
+            },
+            onLoadStart: (controller, url) async {
+              setState(() {
+                _hasError = false;
+              });
+              await controller.evaluateJavascript(
+                source: _kGameClickBridgeJs,
+              );
+            },
+            onLoadStop: (controller, url) async {
+              await controller.evaluateJavascript(
+                source: _kGameClickBridgeJs,
+              );
+            },
+            shouldOverrideUrlLoading:
+                (controller, navigationAction) async {
+              final uri = navigationAction.request.url;
+              if (_isGtaLink(uri)) {
+                await _launchInChrome(kGtaUrl);
+                return NavigationActionPolicy.CANCEL;
+              }
+              if (_isNfsuLink(uri)) {
+                await controller.loadUrl(
+                  urlRequest: URLRequest(url: WebUri(kNfsuUrl)),
+                );
+                return NavigationActionPolicy.CANCEL;
+              }
+              return NavigationActionPolicy.ALLOW;
+            },
+            onCreateWindow: (controller, createWindowAction) async {
+              final uri = createWindowAction.request.url;
+              if (_isGtaLink(uri)) {
+                await _launchInChrome(kGtaUrl);
+                return true;
+              }
+              if (_isNfsuLink(uri)) {
+                await controller.loadUrl(
+                  urlRequest: URLRequest(url: WebUri(kNfsuUrl)),
+                );
+                return true;
+              }
+              if (uri != null) {
+                await controller.loadUrl(
+                  urlRequest: createWindowAction.request,
+                );
+              }
+              return true;
+            },
+            onReceivedError: (controller, request, error) {
+              if (request.isForMainFrame ?? true) {
+                setState(() {
+                  _hasError = true;
+                });
+              }
+            },
           ),
-        ],
+        ),
       ),
     );
   }
