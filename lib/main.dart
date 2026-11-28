@@ -22,6 +22,16 @@ bool _isGtaLink(Uri? uri) {
       s.contains('inxanitylabs.com');
 }
 
+// Sayt manzillari. Boshqa har qanday sayt (o'yin havolalari) Chrome'da ochiladi,
+// chunki ilova ichidagi WebView og'ir o'yinlarni (WebGPU) ko'tarmaydi.
+const Set<String> _kHubHosts = {'topgamehub.uz', 'www.topgamehub.uz'};
+
+bool _isExternalUri(Uri? uri) {
+  if (uri == null) return false;
+  if (uri.scheme != 'http' && uri.scheme != 'https') return false;
+  return !_kHubHosts.contains(uri.host.toLowerCase());
+}
+
 bool _isNfsuLink(Uri? uri) {
   if (uri == null) return false;
   final s = uri.toString().toLowerCase();
@@ -63,7 +73,9 @@ const String _kGameClickBridgeJs = """
     if (text.includes('NEED FOR SPEED: UNDERGROUND') || text.includes('NFS UNDERGROUND')) {
       e.preventDefault();
       e.stopPropagation();
-      window.location.href = '$kNfsuUrl';
+      if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+        window.flutter_inappwebview.callHandler('openGameInChrome', '$kNfsuUrl');
+      }
     }
   }, true);
 })();
@@ -189,8 +201,6 @@ class _GameHubHomePageState extends State<GameHubHomePage> {
               javaScriptEnabled: true,
               domStorageEnabled: true,
               mediaPlaybackRequiresUserGesture: false,
-              allowFileAccessFromFileURLs: true,
-              allowUniversalAccessFromFileURLs: true,
               supportMultipleWindows: true,
               transparentBackground: true,
             ),
@@ -230,28 +240,32 @@ class _GameHubHomePageState extends State<GameHubHomePage> {
             shouldOverrideUrlLoading:
                 (controller, navigationAction) async {
               final uri = navigationAction.request.url;
+              if (_isExternalUri(uri)) {
+                await _launchInChrome(uri.toString());
+                return NavigationActionPolicy.CANCEL;
+              }
               if (_isGtaLink(uri)) {
                 await _launchInChrome(kGtaUrl);
                 return NavigationActionPolicy.CANCEL;
               }
               if (_isNfsuLink(uri)) {
-                await controller.loadUrl(
-                  urlRequest: URLRequest(url: WebUri(kNfsuUrl)),
-                );
+                await _launchInChrome(kNfsuUrl);
                 return NavigationActionPolicy.CANCEL;
               }
               return NavigationActionPolicy.ALLOW;
             },
             onCreateWindow: (controller, createWindowAction) async {
               final uri = createWindowAction.request.url;
+              if (_isExternalUri(uri)) {
+                await _launchInChrome(uri.toString());
+                return true;
+              }
               if (_isGtaLink(uri)) {
                 await _launchInChrome(kGtaUrl);
                 return true;
               }
               if (_isNfsuLink(uri)) {
-                await controller.loadUrl(
-                  urlRequest: URLRequest(url: WebUri(kNfsuUrl)),
-                );
+                await _launchInChrome(kNfsuUrl);
                 return true;
               }
               if (uri != null) {
