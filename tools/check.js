@@ -71,9 +71,25 @@ async function checkLinks() {
     try {
       const ctl = new AbortController();
       const t = setTimeout(() => ctl.abort(), 15000);
-      const res = await fetch(g.url, { method: "GET", redirect: "follow", signal: ctl.signal });
+      const res = await fetch(g.url, {
+        method: "GET",
+        redirect: "follow",
+        signal: ctl.signal,
+        headers: {
+          "user-agent": "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36",
+          accept: "text/html,application/xhtml+xml"
+        }
+      });
       clearTimeout(t);
-      if (res.status >= 400) errors.push(`${key}: ${g.url} -> HTTP ${res.status}`);
+      if ([401, 403, 429].includes(res.status)) {
+        // Ko'pincha bot himoyasi: brauzerda ishlashi mumkin. Xato emas, ogohlantirish.
+        warnings.push(`${key}: ${g.url} -> HTTP ${res.status} (bot himoyasi bo'lishi mumkin, brauzerda qo'lda tekshiring)`);
+        continue;
+      }
+      if (res.status >= 400) {
+        errors.push(`${key}: ${g.url} -> HTTP ${res.status}`);
+        continue;
+      }
       const xfo = (res.headers.get("x-frame-options") || "").toLowerCase();
       const csp = (res.headers.get("content-security-policy") || "").toLowerCase();
       const blocksFrame = xfo.includes("deny") || xfo.includes("sameorigin") || /frame-ancestors\s+('none'|'self')/.test(csp);

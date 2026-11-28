@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$Message = "Auto update 2026-11-26 23:09"
+    [string]$Message = ("Update " + (Get-Date -Format "yyyy-MM-dd HH:mm"))
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,5 +16,19 @@ if ([string]::IsNullOrWhiteSpace($status)) {
 }
 
 git commit -m "$Message"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Commit bajarilmadi. Yuqoridagi xatoni o'qing." -ForegroundColor Red
+    exit 1
+}
+
 git push origin main
+if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
+    Write-Host "GitHub'ga YUKLANMADI." -ForegroundColor Red
+    Write-Host "Agar yuqorida 'rejected / fetch first' bo'lsa, avval shuni bajaring:" -ForegroundColor Yellow
+    Write-Host "    git pull --rebase origin main" -ForegroundColor Yellow
+    Write-Host "keyin yana .\sync.ps1 ni ishga tushiring." -ForegroundColor Yellow
+    exit 1
+}
+
 Write-Host "Tayyor! GitHub'ga yuklandi." -ForegroundColor Green
